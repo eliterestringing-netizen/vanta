@@ -1,0 +1,2 @@
+export interface HostingService { getAccount(): Promise<{ plan:string; storage:string; bandwidth:string; status:string }>; createAccount(plan:string): Promise<void>; suspendAccount(): Promise<void>; activateAccount(): Promise<void>; deleteAccount(): Promise<void> }
+export const hostingService: HostingService = { async getAccount(){return {plan:"Business",storage:"4.8 GB / 25 GB",bandwidth:"42 GB / Unlimited",status:"Active"}}, async createAccount(){},async suspendAccount(){},async activateAccount(){},async deleteAccount(){} };

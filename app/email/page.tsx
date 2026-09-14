@@ -1,0 +1,2 @@
+import { ProductPage } from "@/components/product-page";
+export default function Email(){return <ProductPage eyebrow="Business email" title="An address that means business." description="Professional email on your domain, with enough space and protection for your team." plans={[{name:"Basic",price:"$4.95",features:["1 inbox","10 GB storage","Mobile sync"]},{name:"Business",price:"$8.95",features:["5 inboxes","50 GB storage","Shared calendar"]},{name:"Professional",price:"$14.95",features:["Unlimited inboxes","100 GB storage","Advanced protection"]}]}/>}

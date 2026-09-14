@@ -1,0 +1,3 @@
+import { ProductPage } from "@/components/product-page";
+const plans=[{name:"Starter",price:"$6.95",features:["1 website","10 GB fast storage","Free SSL","Daily backups"]},{name:"Business",price:"$13.95",features:["10 websites","25 GB fast storage","Email included","Priority support"]},{name:"Professional",price:"$24.95",features:["25 websites","100 GB fast storage","Staging tools","Advanced security"]},{name:"Enterprise",price:"Let’s talk",features:["Custom resources","Managed migrations","Dedicated support","Built to scale"]}];
+export default function Hosting(){return <ProductPage eyebrow="Web hosting" title="Hosting that lets your ideas move fast." description="Fast, dependable hosting with the practical tools you need to build, launch and grow." plans={plans}/>}

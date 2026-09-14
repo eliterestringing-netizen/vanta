@@ -1,0 +1,2 @@
+import type { DomainResult } from "@/types";
+export interface DomainProvider { search(query: string): Promise<DomainResult[]>; getDomain(domain: string): Promise<{ domain: string; registeredAt: string; expiresAt: string; status: string }>; register(domain: string, years: number): Promise<{ orderId: string }>; renew(domain: string, years: number): Promise<void>; transfer(domain: string, eppCode: string): Promise<void>; }

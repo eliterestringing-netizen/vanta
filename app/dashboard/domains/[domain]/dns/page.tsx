@@ -1,0 +1,2 @@
+import { DashboardLayout } from "@/components/dashboard-nav";import { DNSManager } from "@/components/dns-manager";
+export default async function DNS({params}:{params:Promise<{domain:string}>}){const {domain}=await params;return <DashboardLayout><div className="pagehead"><div><h1>DNS management</h1><p className="muted">{domain} · Direct traffic, email and verification records.</p></div></div><DNSManager/></DashboardLayout>}

@@ -1,0 +1,3 @@
+import type { DNSRecord } from "@/types";
+let records: DNSRecord[] = [{id:"1",type:"A",name:"@",value:"192.0.2.1",ttl:3600},{id:"2",type:"CNAME",name:"www",value:"example.com.au",ttl:3600},{id:"3",type:"MX",name:"@",value:"mail.vanta.example",ttl:3600},{id:"4",type:"TXT",name:"@",value:"v=spf1 include:mail.vanta.example ~all",ttl:3600}];
+export const dnsService = { async getRecords(){return records}, async createRecord(record: Omit<DNSRecord,"id">){const next={...record,id:crypto.randomUUID()};records=[...records,next];return next}, async updateRecord(id:string, record:Partial<DNSRecord>){records=records.map(r=>r.id===id?{...r,...record}:r);return records.find(r=>r.id===id)!}, async deleteRecord(id:string){records=records.filter(r=>r.id!==id)} };

@@ -1,0 +1,3 @@
+import { SiteHeader } from "@/components/site-header";
+const rows=[[".com","$29.95","$29.95"],[".com.au","$24.95","$24.95"],[".au","$19.95","$19.95"],["Starter hosting","$6.95/mo","$6.95/mo"],["Domain SSL","$49.95/yr","$49.95/yr"],["Business email","$8.95/mo","$8.95/mo"]];
+export default function Pricing(){return <><SiteHeader/><main className="page"><div className="shell"><div className="pagehead"><div><h1>Simple, clear pricing.</h1><p className="muted">No hidden fees. Renewal prices are always shown upfront.</p></div></div><table className="table"><thead><tr><th>Product</th><th>Starting price</th><th>Renewal price</th></tr></thead><tbody>{rows.map(r=><tr key={r[0]}>{r.map(x=><td key={x}>{x}</td>)}</tr>)}</tbody></table></div></main></>}
