@@ -1,2 +1,30 @@
-import { AddToCart } from "@/components/cart-button"; import { DomainSearch } from "@/components/domain-search"; import { SiteHeader } from "@/components/site-header"; import { domainService } from "@/lib/domains"; import Link from "next/link";
-export default async function Domains({searchParams}:{searchParams:Promise<{q?:string}>}){const {q="example"}=await searchParams; const results=(await domainService.search(q)).filter(item=>item.status === "available"); return <><SiteHeader/><main className="page"><div className="shell"><div className="pagehead"><div><h1>Find your perfect domain</h1><p className="muted">Only domains currently available to register are shown.</p></div><Link href="/cart" className="button ghost">View cart</Link></div><DomainSearch initial={q}/><div className="results" style={{marginTop:30}}>{results.length ? results.map(item=><article className="result" key={item.domain}><div className="resultName">{item.domain}<div className="available">Available now</div></div><div className="price">${item.price?.toFixed(2)} <span className="muted" style={{fontWeight:400}}>/ year</span></div><AddToCart item={{domain:item.domain,price:item.price!,years:1,autoRenew:true}}/></article>) : <section className="card"><h3>No available options found.</h3><p className="muted">Try another name or extension.</p></section>}</div></div></main></>}
+import { DomainSearch } from "@/components/domain-search";
+import { SiteHeader } from "@/components/site-header";
+
+export default async function Domains({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const { q = "" } = await searchParams;
+
+  return (
+    <>
+      <SiteHeader />
+      <main className="page">
+        <div className="shell">
+          <div className="pagehead">
+            <div>
+              <h1>Find your perfect domain</h1>
+              <p className="muted">Search live availability and finish securely in our domain store.</p>
+            </div>
+          </div>
+          <DomainSearch initial={q} />
+          <section className="card domain-store-card">
+            <span className="eyebrow">Live domain search</span>
+            <h2>Real availability. Clear pricing.</h2>
+            <p className="muted">
+              Domain results, registration and payment are provided by our secure registrar storefront, so you only see names that can actually be registered.
+            </p>
+          </section>
+        </div>
+      </main>
+    </>
+  );
+}
