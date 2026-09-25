@@ -9,11 +9,11 @@
   --green: #159662;
 }
 
-.brand-logo { width: 218px; height: 58px; object-fit: contain; object-position: left center; }
-.navin { height: 84px; }
+.brand-logo { width: 278px; height: 72px; object-fit: contain; object-position: left center; }
+.navin { height: 100px; }
 @media (max-width: 760px) {
-  .brand-logo { width: 188px; height: 52px; }
-  .navin { height: 70px; }
+  .brand-logo { width: 220px; height: 60px; }
+  .navin { height: 78px; }
 }
 .links { color: #415a52; }
 .button:hover { background: #0d7b4e; }
