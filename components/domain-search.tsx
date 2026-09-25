@@ -1,19 +1,17 @@
 "use client";
 
 import { useState } from "react";
-
-import { domainStoreUrl } from "@/lib/domain-store";
+import { useRouter } from "next/navigation";
 
 export function DomainSearch({ initial = "" }: { initial?: string }) {
   const [value, setValue] = useState(initial);
+  const router = useRouter();
 
   function search(event: React.FormEvent) {
     event.preventDefault();
     if (!value.trim()) return;
 
-    // Availability and purchase are handled by the live registrar storefront.
-    // This avoids displaying mock availability as a real result.
-    window.location.assign(domainStoreUrl);
+    router.push(`/domains?q=${encodeURIComponent(value.trim())}`);
   }
 
   return (
@@ -25,9 +23,9 @@ export function DomainSearch({ initial = "" }: { initial?: string }) {
           aria-label="Domain name"
           placeholder="mybusiness.com.au"
         />
-        <button className="button" type="submit">Search live domains</button>
+        <button className="button" type="submit">Search domains</button>
       </form>
-      <p className="search-note">Live availability and secure checkout open in our domain store.</p>
+      <p className="search-note">Search and manage your domains in one place.</p>
       <div className="pills" aria-label="Popular extensions">
         {[".com", ".com.au", ".au", ".net", ".org"].map((extension) => (
           <button key={extension} type="button" className="pill" onClick={() => setValue(`mybusiness${extension}`)}>

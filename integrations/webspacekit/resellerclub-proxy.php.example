@@ -1,0 +1,41 @@
+<?php
+// Deploy this file outside the public website directory on WebSpaceKit and
+// expose it through a protected HTTPS path. Set these three values in hosting
+// environment/configuration; never commit real values into this file.
+$proxyToken = getenv('LUCKY_PROXY_TOKEN');
+$resellerId = getenv('RESELLERCLUB_RESELLER_ID');
+$apiKey = getenv('RESELLERCLUB_API_KEY');
+
+header('Content-Type: application/json');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals('Bearer ' . $proxyToken, $_SERVER['HTTP_AUTHORIZATION'] ?? '')) {
+  http_response_code(401); echo json_encode(['error' => 'Unauthorised']); exit;
+}
+
+$input = json_decode(file_get_contents('php://input'), true);
+if (($input['action'] ?? '') !== 'availability' || !is_array($input['tlds'] ?? null)) {
+  http_response_code(400); echo json_encode(['error' => 'Invalid request']); exit;
+}
+
+$name = strtolower($input['domain'] ?? '');
+if (!preg_match('/^[a-z0-9-]{1,63}$/', $name)) {
+  http_response_code(400); echo json_encode(['error' => 'Invalid domain']); exit;
+}
+
+$allowedTlds = ['com', 'com.au', 'au', 'net', 'org'];
+$tlds = array_values(array_intersect($allowedTlds, $input['tlds']));
+if (!$tlds) { http_response_code(400); echo json_encode(['error' => 'Invalid extension']); exit; }
+
+$query = http_build_query(['auth-userid' => $resellerId, 'api-key' => $apiKey, 'domain-name' => $name]);
+foreach ($tlds as $tld) $query .= '&tlds=' . rawurlencode($tld);
+
+$curl = curl_init('https://domaincheck.httpapi.com/api/domains/available.json?' . $query);
+curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 15, CURLOPT_HTTPHEADER => ['Accept: application/json']]);
+$raw = curl_exec($curl); $status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE); curl_close($curl);
+if ($raw === false || $status !== 200) { http_response_code(502); echo json_encode(['error' => 'Registrar unavailable']); exit; }
+
+$availability = json_decode($raw, true); $results = [];
+foreach ($tlds as $tld) {
+  $state = $availability[$name][$tld]['status'] ?? $availability[$tld]['status'] ?? 'unknown';
+  $results[] = ['domain' => "$name.$tld", 'status' => $state === 'available' ? 'available' : ($state === 'unknown' ? 'unknown' : 'unavailable')];
+}
+echo json_encode(['results' => $results]);
