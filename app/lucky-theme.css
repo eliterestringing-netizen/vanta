@@ -1,0 +1,17 @@
+/* Lucky Domains brand colours layered over the original application styles. */
+:root {
+  --ink: #102b25;
+  --muted: #62746f;
+  --line: #dfe9e3;
+  --blue: #159662;
+  --navy: #062b22;
+  --soft: #f5faf7;
+  --green: #159662;
+}
+
+.brand-logo { width: 178px; height: 48px; object-fit: contain; object-position: left center; }
+.links { color: #415a52; }
+.button:hover { background: #0d7b4e; }
+.hero { background: linear-gradient(114deg, #effaf4 0%, #fff 60%, #e9f7ef); }
+.eyebrow { color: #11784f; background: #e3f7ea; }
+.searchbox { border-color: #d8e8df; box-shadow: 0 15px 45px #0d59311c; }
