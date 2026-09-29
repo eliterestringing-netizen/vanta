@@ -34,8 +34,14 @@ export class ResellerClubProxyProvider implements DomainProvider {
       });
       throw new Error("The registrar is temporarily unavailable.");
     }
-    const body = (await response.json()) as { results?: ProxyAvailability[] };
-    if (!Array.isArray(body.results)) throw new Error("The registrar returned an unexpected result.");
+    const body = (await response.json()) as { results?: ProxyAvailability[]; error?: string };
+    if (!Array.isArray(body.results)) {
+      console.error("[registrar-bridge] unexpected response shape", {
+        hasResults: false,
+        hasError: Boolean(body.error),
+      });
+      throw new Error("The registrar returned an unexpected result.");
+    }
 
     return body.results
       .filter((item) => item.status !== "unknown")
