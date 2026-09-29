@@ -19,7 +19,10 @@ export class ResellerClubProxyProvider implements DomainProvider {
     const parsed = splitDomain(query);
     const response = await fetch(this.proxyUrl, {
       method: "POST",
-      headers: { "content-type": "application/json", authorization: `Bearer ${this.proxyToken}` },
+      // WebSpaceKit reliably forwards custom request headers to PHP, while
+      // standard Authorization headers can be removed by shared-host rules.
+      // This value is server-only and is converted back inside the private bridge.
+      headers: { "content-type": "application/json", "x-bridge-token": this.proxyToken },
       body: JSON.stringify({ action: "availability", domain: parsed.name, tlds: parsed.tlds }),
       cache: "no-store",
     });
