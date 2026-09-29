@@ -24,7 +24,16 @@ export class ResellerClubProxyProvider implements DomainProvider {
       cache: "no-store",
     });
 
-    if (!response.ok) throw new Error("The registrar is temporarily unavailable.");
+    if (!response.ok) {
+      // Keep the customer-facing message generic, but retain a safe upstream
+      // status in server logs so the bridge can be diagnosed without exposing
+      // credentials in the browser.
+      console.error("[registrar-bridge] upstream request failed", {
+        status: response.status,
+        statusText: response.statusText,
+      });
+      throw new Error("The registrar is temporarily unavailable.");
+    }
     const body = (await response.json()) as { results?: ProxyAvailability[] };
     if (!Array.isArray(body.results)) throw new Error("The registrar returned an unexpected result.");
 
