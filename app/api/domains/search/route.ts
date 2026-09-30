@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { domainService, isLiveDomainSearchConfigured } from "@/lib/domains";
 
+// The Fixie proxy uses Node networking, so this cannot run on the Edge runtime.
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get("q")?.trim();
   if (!query) return NextResponse.json({ error: "Enter a domain name." }, { status: 400 });
