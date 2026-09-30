@@ -9,7 +9,9 @@ type DynadotResponse = {
     Error?: string;
     SearchResults?: Array<{
       DomainName?: string;
-      Available?: "yes" | "no";
+      // Dynadot's legacy endpoint has returned both string and boolean
+      // availability values across account/API versions.
+      Available?: string | boolean | number;
       Price?: string;
     }>;
   };
@@ -72,6 +74,10 @@ function parsePrice(price?: string) {
   return match ? Number(match[0]) : undefined;
 }
 
+function isAvailable(value: string | boolean | number | undefined) {
+  return ["yes", "true", "1", "available"].includes(String(value).trim().toLowerCase());
+}
+
 /** Server-only Dynadot availability provider. Requests leave Vercel via Fixie. */
 export class DynadotProvider implements DomainProvider {
   constructor(
@@ -97,7 +103,7 @@ export class DynadotProvider implements DomainProvider {
 
     return (search.SearchResults ?? []).map((item) => ({
       domain: item.DomainName ?? domain,
-      status: item.Available === "yes" ? "available" : "unavailable",
+      status: isAvailable(item.Available) ? "available" : "unavailable",
       price: parsePrice(item.Price),
     }));
   }
