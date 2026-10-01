@@ -9,13 +9,17 @@ import type { DomainStatus } from "@/types";
 export async function checkAuRegistry(domain: string): Promise<DomainStatus | null> {
   if (!/\.(?:com\.au|au)$/.test(domain)) return null;
 
-  const response = await fetch(`https://rdap.cctld.au/rdap/domain/${encodeURIComponent(domain)}`, {
-    headers: { Accept: "application/rdap+json, application/json" },
-    cache: "no-store",
-    signal: AbortSignal.timeout(8_000),
-  });
+  try {
+    const response = await fetch(`https://rdap.cctld.au/rdap/domain/${encodeURIComponent(domain)}`, {
+      headers: { Accept: "application/rdap+json, application/json" },
+      cache: "no-store",
+      signal: AbortSignal.timeout(8_000),
+    });
 
-  if (response.status === 404) return "available";
-  if (response.ok) return "unavailable";
-  return "unknown";
+    if (response.status === 404) return "available";
+    if (response.ok) return "unavailable";
+    return "unknown";
+  } catch {
+    return "unknown";
+  }
 }
