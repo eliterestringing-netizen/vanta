@@ -19,14 +19,32 @@ export class ResellerClubProxyProvider implements DomainProvider {
     const parsed = splitDomain(query);
     const response = await fetch(this.proxyUrl, {
       method: "POST",
-      headers: { "content-type": "application/json", authorization: `Bearer ${this.proxyToken}` },
+      // WebSpaceKit reliably forwards custom request headers to PHP, while
+      // standard Authorization headers can be removed by shared-host rules.
+      // This value is server-only and is converted back inside the private bridge.
+      headers: { "content-type": "application/json", "x-bridge-token": this.proxyToken },
       body: JSON.stringify({ action: "availability", domain: parsed.name, tlds: parsed.tlds }),
       cache: "no-store",
     });
 
-    if (!response.ok) throw new Error("The registrar is temporarily unavailable.");
-    const body = (await response.json()) as { results?: ProxyAvailability[] };
-    if (!Array.isArray(body.results)) throw new Error("The registrar returned an unexpected result.");
+    if (!response.ok) {
+      // Keep the customer-facing message generic, but retain a safe upstream
+      // status in server logs so the bridge can be diagnosed without exposing
+      // credentials in the browser.
+      console.error("[registrar-bridge] upstream request failed", {
+        status: response.status,
+        statusText: response.statusText,
+      });
+      throw new Error("The registrar is temporarily unavailable.");
+    }
+    const body = (await response.json()) as { results?: ProxyAvailability[]; error?: string };
+    if (!Array.isArray(body.results)) {
+      console.error("[registrar-bridge] unexpected response shape", {
+        hasResults: false,
+        hasError: Boolean(body.error),
+      });
+      throw new Error("The registrar returned an unexpected result.");
+    }
 
     return body.results
       .filter((item) => item.status !== "unknown")

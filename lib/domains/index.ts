@@ -1,10 +1,10 @@
 import { mockDomainProvider } from "./mock-domain-provider";
-import { ResellerClubProxyProvider } from "./resellerclub-proxy-provider";
+import { DynadotProvider } from "./dynadot-provider";
 
-const proxyUrl = process.env.RESELLERCLUB_PROXY_URL;
-const proxyToken = process.env.RESELLERCLUB_PROXY_TOKEN;
+const dynadotApiKey = process.env.DYNADOT_API_KEY;
+const fixieUrl = process.env.FIXIE_URL;
 
-export const isLiveDomainSearchConfigured = Boolean(proxyUrl && proxyToken);
+export const isLiveDomainSearchConfigured = Boolean(dynadotApiKey && fixieUrl);
 export const domainService = isLiveDomainSearchConfigured
-  ? new ResellerClubProxyProvider(proxyUrl!, proxyToken!)
+  ? new DynadotProvider(dynadotApiKey!, fixieUrl!)
   : mockDomainProvider;

@@ -2,12 +2,26 @@ import Link from "next/link";
 import { DomainSearch } from "@/components/domain-search";
 import { SiteHeader } from "@/components/site-header";
 
-const features = [["⌕", "Find the right name", "Search domain names with clear, simple pricing."], ["◌", "Free DNS included", "Point your domain wherever you need, with DNS included at no extra cost."], ["✓", "Help when you need it", "Clear steps and friendly support for every stage of your domain journey."]];
+const extensions = [[".com", "$16.07/yr"], [".com.au", "From $20.99/yr"], [".net", "$18.49/yr"], [".org", "$11.79/yr"]];
 
 export default function Home() {
-  return <><SiteHeader/><main>
-    <section className="hero"><div className="shell"><span className="eyebrow">Simple domains, good luck</span><h1>Your idea deserves a great domain.</h1><p className="lead">Find and register the right domain for your business. Clear pricing, free DNS, and one simple place to manage it all.</p><DomainSearch/></div></section>
-    <section className="section"><div className="shell"><h2>Domains made simple.</h2><p className="muted">Everything you need to get your name online, without the confusing extras.</p><div className="grid3">{features.map(([icon,title,text])=><article className="card" key={title}><div className="icon">{icon}</div><h3>{title}</h3><p className="muted">{text}</p></article>)}</div></div></section>
-    <section className="dark section"><div className="shell"><div className="split"><div><span className="eyebrow">Lucky starts here</span><h2>Find a name that feels right.</h2><p className="muted">Search domains, register with confidence, and manage your online address from one calm dashboard.</p><Link className="button" href="/domains">Search domains</Link></div><div className="grid3" style={{gridTemplateColumns:"repeat(3,1fr)",alignSelf:"end"}}>{[["Free","DNS included"],["24/7","support"],["1 place","to manage"]].map(([value,label])=><div key={label}><div className="metric">{value}</div><div className="muted">{label}</div></div>)}</div></div></div></section>
+  return <><SiteHeader /><main className="lucky-home">
+    <section className="lucky-hero"><div className="shell lucky-hero-grid">
+      <div className="hero-copy">
+        <p className="hero-kicker">Big ideas deserve a great name</p>
+        <h1>The good name<br />starts here<span>.</span></h1>
+        <p className="hero-description">Register, transfer and manage your domain with confidence. Simple tools, clear prices and real support for Australian businesses.</p>
+        <DomainSearch />
+        <div className="extension-strip"><p>Popular extensions</p><div className="extension-cards">{extensions.map(([name, price], index) => <div className="extension-card" key={name}>{index === 1 && <span className="extension-badge">Aussie favourite</span>}<strong>{name}</strong><small>{price}</small></div>)}</div></div>
+      </div>
+      <div className="hero-art" aria-label="Domain extensions illustration">
+        <div className="scribble scribble-top">Ideas<br />go further<br />here.</div><div className="domain-tile tile-com">.com</div><div className="domain-tile tile-au">.com.au</div><div className="domain-tile tile-ai">.ai</div>
+        <div className="art-clover" aria-hidden="true"><i /><i /><i /><i /></div><div className="scribble scribble-bottom">Good business<br />lives here.</div>
+      </div>
+    </div></section>
+    <section className="trust-row"><div className="shell trust-grid">
+      <div><b>↯</b><span><strong>Fast registration</strong>Get online in minutes</span></div><div><b>⌾</b><span><strong>Trusted &amp; secure</strong>Your name, protected</span></div><div><b>◔</b><span><strong>Local support</strong>Real people in Australia</span></div><div><b>♡</b><span><strong>Built for small business</strong>Big dreams welcome</span></div>
+    </div></section>
+    <section className="lucky-promise"><div className="shell promise-grid"><strong>Fair prices.<br />No surprises.</strong><strong>A luckier internet<br />for everyone.</strong><Link href="/domains" className="promise-link">Search a domain <span>→</span></Link></div></section>
   </main><footer className="footer"><div className="shell">© 2026 Lucky Domains. Your good luck online.</div></footer></>;
 }
